@@ -9,7 +9,7 @@
    Репозиторий:
    https://github.com/devmanorg/e-diary/tree/master
 2) Положить файл с базой данных 
-   в каталог с кодом электронного дневника 
+   в папку с кодом электронного дневника 
 3) Положить файл scripts.py в папку с кодом электронного дневника.
    Рядом с файлом manage.py.
 4) Чтобы запустить shell, написать в терминале: 
@@ -22,7 +22,7 @@
     from scripts import find_schoolkid, find_lesson, fix_marks, remove_chastisements, create_commendation
     ```
 
-### How to use
+### Как пользоваться
 1) Исправить оценки любому ученику: 
     ```
     fix_marks(name) 
@@ -36,6 +36,6 @@
     create_commendation(name, subject)
     ```
 
-### Project Goals
+### Цели проекта
 
-The code is written for educational purposes on online-course for web-developers [dvmn.org](https://dvmn.org/).
+Код написан в учебных целях на курсе веб-разработки [dvmn.org](https://dvmn.org/).
