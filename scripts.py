@@ -1,4 +1,9 @@
+import random
+
 from django.core.exceptions import MultipleObjectsReturned
+
+from datacenter.models import Schoolkid, Teacher, Subject, Lesson
+from datacenter.models import Mark, Chastisement, Commendation
 
 
 def find_schoolkid(name):
@@ -11,8 +16,18 @@ def find_schoolkid(name):
         print('Учеников не найдено')
 
 
+def find_lesson(subject, kid_lessons):
+    subject_lessons = kid_lessons.filter(subject__title=subject)
+    num_subject_lessons = subject_lessons.count()
+    if num_subject_lessons == 0:
+        print('Нет в программе такого предмета. Проверь название предмета')
+        return
+    lesson = subject_lessons[random.randint(0, num_subject_lessons - 1)]
+    return lesson
+
+
 def fix_marks(name):
-    schoolkid = find_kid(name)
+    schoolkid = find_schoolkid(name)
     if not schoolkid:
         return
     bad_kid_marks = Mark.objects.filter(schoolkid=schoolkid).filter(points__in=[2, 3])
@@ -22,7 +37,7 @@ def fix_marks(name):
 
 
 def remove_chastisements(name):
-    schoolkid = find_kid(name)
+    schoolkid = find_schoolkid(name)
     if not schoolkid:
         return
     kid_chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
@@ -30,7 +45,7 @@ def remove_chastisements(name):
 
 
 def create_commendation(name, subject):
-    schoolkid = find_kid(name)
+    schoolkid = find_schoolkid(name)
     if not schoolkid:
         return
     recommended_commendations = [
@@ -49,9 +64,9 @@ def create_commendation(name, subject):
     year_of_study = schoolkid.year_of_study
     group_letter = schoolkid.group_letter
     kid_lessons = Lesson.objects.filter(year_of_study=year_of_study, group_letter=group_letter)
-    subject_lessons = kid_lessons.filter(subject__title=subject)
-    num_subject_lessons = subject_lessons.count()
-    lesson = subject_lessons[random.randint(0, num_subject_lessons-1)]
+    lesson = find_lesson(subject, kid_lessons)
+    if not lesson:
+        return
     text = random.choice(recommended_commendations)
     commendation = Commendation.objects.create(
         text=text,
