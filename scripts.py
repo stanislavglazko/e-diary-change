@@ -1,7 +1,5 @@
 import random
 
-from django.core.exceptions import MultipleObjectsReturned
-
 from datacenter.models import Schoolkid, Teacher, Subject, Lesson
 from datacenter.models import Mark, Chastisement, Commendation
 
@@ -10,19 +8,18 @@ def find_schoolkid(name):
     try:
         schoolkid = Schoolkid.objects.get(full_name__contains=name)
         return schoolkid
-    except MultipleObjectsReturned:
+    except Schoolkid.MultipleObjectsReturned:
         print('Найдено больше одного ученика')
     except Schoolkid.DoesNotExist:
         print('Учеников не найдено')
 
 
 def find_lesson(subject, kid_lessons):
-    subject_lessons = kid_lessons.filter(subject__title=subject)
-    num_subject_lessons = subject_lessons.count()
-    if num_subject_lessons == 0:
+    try:
+        lesson = kid_lessons.filter(subject__title=subject).order_by('?')[0]
+    except IndexError:
         print('Нет в программе такого предмета. Проверь название предмета')
         return
-    lesson = subject_lessons[random.randint(0, num_subject_lessons - 1)]
     return lesson
 
 
